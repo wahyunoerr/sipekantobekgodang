@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +23,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'nik',
+        'nokk',
+        'alamat',
+        'jenis_kelamin',
+        'foto',
+        'fotocopy_kk',
+        'fotocopy_ktp',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'agama',
+        'pekerjaan',
     ];
 
     /**
@@ -42,4 +55,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
 }
